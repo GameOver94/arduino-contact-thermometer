@@ -31,11 +31,13 @@ double sensVal;
 double Setpoint, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=2, Ki=5, Kd=1;
+double Kp=7, Ki=5, Kd=2;
 uint16_t sampleTime = 700;
 PID myPID(&sensVal, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-uint16_t WindowSize = 10000;
+uint16_t WindowSize = 5000;
+uint16_t timeFactor = 5;
+uint16_t upLimit = WindowSize/timeFactor;
 uint32_t windowStartTime;
 
 
@@ -62,9 +64,10 @@ void setup() {
   windowStartTime = millis();
   //initialize the variables we're linked to
   Setpoint = 85;
+  Output = 1000;
 
   //tell the PID to range between 0 and the full window size
-  myPID.SetOutputLimits(0, WindowSize);
+  myPID.SetOutputLimits(0, upLimit);
   myPID.SetSampleTime(sampleTime);                                                
 
   //turn the PID on
@@ -89,7 +92,7 @@ void loop() {
     //Serial.println("DONE");
     //Serial.print("Temperature for the device 1 (index 0) is: ");
     //Serial.println(sensVal);
-    Serial.println(Output);
+    Serial.println(String(Output) + "," + String(sensVal));
   }
 
 
@@ -103,7 +106,8 @@ void loop() {
   { //time to shift the Relay Window
     windowStartTime += WindowSize;
   }
-  if (Output < millis() - windowStartTime) digitalWrite(RELAY_PIN, LOW);          // for normaly open relay 
+  double relayTime = Output*timeFactor;
+  if (relayTime < millis() - windowStartTime) digitalWrite(RELAY_PIN, LOW);          // for normaly open relay 
   else digitalWrite(RELAY_PIN, HIGH);
 
 
