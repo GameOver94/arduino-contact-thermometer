@@ -31,7 +31,7 @@ double sensVal;
 double Setpoint, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=7, Ki=5, Kd=2;
+double Kp=200, Ki=2, Kd=2;
 uint16_t sampleTime = 700;
 PID myPID(&sensVal, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
@@ -64,7 +64,6 @@ void setup() {
   windowStartTime = millis();
   //initialize the variables we're linked to
   Setpoint = 85;
-  Output = 1000;
 
   //tell the PID to range between 0 and the full window size
   myPID.SetOutputLimits(0, upLimit);
