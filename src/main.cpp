@@ -61,7 +61,7 @@ void setup() {
 
   windowStartTime = millis();
   //initialize the variables we're linked to
-  Setpoint = 100;
+  Setpoint = 85;
 
   //tell the PID to range between 0 and the full window size
   myPID.SetOutputLimits(0, WindowSize);
@@ -103,8 +103,8 @@ void loop() {
   { //time to shift the Relay Window
     windowStartTime += WindowSize;
   }
-  if (Output < millis() - windowStartTime) digitalWrite(RELAY_PIN, HIGH);
-  else digitalWrite(RELAY_PIN, LOW);
+  if (Output < millis() - windowStartTime) digitalWrite(RELAY_PIN, LOW);          // for normaly open relay 
+  else digitalWrite(RELAY_PIN, HIGH);
 
 
 
